@@ -1,6 +1,12 @@
 import random
 import sys
 import csv
+import os
+
+
+script_dir = os.path.dirname(__file__)  # Get the directory of the current script
+csv_path = os.path.join(script_dir, 'valid-words.csv')  # Join the script directory with the CSV file name
+
 
 wordle_len = 5
 wordle_tries = 6
@@ -16,7 +22,7 @@ def read_csv(path):
     return data
 
 
-valid_word_data = read_csv(r"C:\Users\Sawyer B\Desktop\Programming_Projects\wordle\valid-words.csv")
+valid_word_data = read_csv(csv_path)
 
 all_words = valid_word_data
 
@@ -32,10 +38,10 @@ def on_lose():
     correct_word = ''.join(selected_word)
     print("Good Try, The correct word was " + correct_word + ".\nCare to Try Again?\ny/n")
     response = input().lower()
-    if response == 'y':
+    if response == 'y' or response == 'yes':
         wordle_tries = 6
         main()
-    elif response == 'n':
+    elif response == 'n' or response == 'no':
         sys.exit()
     else:
         print("Incorrect Input, Try Again!")
@@ -95,6 +101,9 @@ def main():
                 wordle_tries -= 1
         else:
             print("Invalid Word Choice, Please Try Again.")
+
+    if (wordle_tries == 0):
+        on_lose()
             
 
 
