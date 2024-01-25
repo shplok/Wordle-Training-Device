@@ -27,10 +27,11 @@ valid_word_data = read_csv(csv_path)
 all_words = valid_word_data
 
 
-def word_select():
-    global selected_word
+def word_select() -> list:
+
     selected_word = list(random.choice(valid_word_data).upper())
     return selected_word
+    
 
 
 def on_lose():
@@ -38,14 +39,29 @@ def on_lose():
     correct_word = ''.join(selected_word)
     print("Good Try, The correct word was " + correct_word + ".\nCare to Try Again?\ny/n")
     response = input().lower()
-    if response == 'y' or response == 'yes':
+    if response in ['y', 'yes']:
         wordle_tries = 6
         main()
-    elif response == 'n' or response == 'no':
+    elif response in ['n', 'no']:
         sys.exit()
     else:
         print("Incorrect Input, Try Again!")
         on_lose()
+
+
+
+def on_win():
+    global wordle_tries
+    print("\nCare to Try Again?\ny/n")
+    response = input().lower()
+    if response in ['y', 'yes']:
+        wordle_tries = 6
+        main()
+    elif response in ['n', 'no']:
+        sys.exit()
+    else:
+        print("Incorrect Input, Try Again!")
+        on_win()
 
 
 def wordle_visualizer(selected_word, guessed_word, wordle_tries):
@@ -67,15 +83,28 @@ def wordle_visualizer(selected_word, guessed_word, wordle_tries):
 
 
 
-def remaining_letters():
+def remaining_letters(selected_word, guessed_word):
+    
+    
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    remaining_letters_list = list(alphabet)
 
-    keyboardAlpha = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M']
 
-    for i in range (len(keyboardAlpha)):
-        sorted_word = selected_word.sort()
+    for letter in guessed_word:
+        if letter in remaining_letters_list:
+            remaining_letters_list.remove(letter)
 
-    return 1
 
+    for letter in selected_word:
+        if letter in remaining_letters_list:
+            remaining_letters_list.remove(letter)
+
+    print("Remaining Letters:", remaining_letters_list)
+    
+    return remaining_letters_list
+
+
+    
 ## FIX DOUBLE LETTERS
 
 
@@ -83,26 +112,24 @@ def remaining_letters():
 def main():
     global wordle_tries
     selected_word = word_select()
-    
-
-
-    while (wordle_tries != 0):
+    while wordle_tries != 0:
         guessed_word = input("Enter a Word: ").upper()
 
+        remaining_letters_list = remaining_letters(selected_word, guessed_word)
 
         if guessed_word in all_words:
             wordle_visualizer(selected_word, guessed_word, wordle_tries)
 
-
             if guessed_word == ''.join(selected_word):
                 print("Congratulations, Your Guess Was Correct! The Word Was " + ''.join(selected_word))
+                on_win()
                 break
             else:
                 wordle_tries -= 1
         else:
             print("Invalid Word Choice, Please Try Again.")
 
-    if (wordle_tries == 0):
+    if wordle_tries == 0:
         on_lose()
             
 
