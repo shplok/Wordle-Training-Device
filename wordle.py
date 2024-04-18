@@ -38,26 +38,25 @@ def word_select() -> list:
     return selected_word
 
 
-def on_lose():
-    
-    
+def on_lose(selected_word):
+
     global wordle_tries
     correct_word = ''.join(selected_word)
-    
-    print("Good Try, The correct word was " + correct_word + ".\nCare to Try Again?\ny/n")
-    
+
+    print(f"Good try, the correct word was {correct_word}.")
+    print("Care to Try Again?\ny/n")
+
     response = input().lower()
-    
+
     if response in ['y', 'yes']:
         wordle_tries = 6
         main()
-    
+        
     elif response in ['n', 'no']:
         sys.exit()
-
     else:
         print("Incorrect Input, Try Again!")
-        on_lose()
+        on_lose(selected_word)
 
 
 def on_win():
@@ -126,16 +125,15 @@ def remaining_letters(selected_word, guessed_word, remaining_letters_list):
 
 
 def main():
-    global wordle_tries
+
+    global wordle_tries, selected_word
     selected_word = word_select()
 
     remaining_letters_list = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
-    # print(selected_word)
-
     while wordle_tries != 0:
-        guessed_word = input("Enter a Word: ").upper()
 
+        guessed_word = input("Enter a Word: ").upper()
         remaining_letters_list = remaining_letters(selected_word, guessed_word, remaining_letters_list)
 
         if guessed_word in all_words:
@@ -145,17 +143,13 @@ def main():
                 print("Congratulations, Your Guess Was Correct! The Word Was " + ''.join(selected_word))
                 on_win()
                 break
-
             else:
-
                 wordle_tries -= 1
         else:
-            
             print("Invalid Word Choice, Please Try Again.")
-
+            
     if wordle_tries == 0:
-        on_lose()
-
+        on_lose(selected_word)
 
 if __name__ == '__main__':
     main()
