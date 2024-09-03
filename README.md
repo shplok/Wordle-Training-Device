@@ -13,3 +13,5 @@ A Capital letter means that it is in the right place!
 A lowercase letter is not in the right place but is in the word!
 
 An '_' is a blank space!
+
+You may Customize valid-words.csv in order to create fun challenges for friends, or to create a larger/smaller range of words to work with!
